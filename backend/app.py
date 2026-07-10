@@ -47,10 +47,6 @@ def health():
         "status": "healthy"
     })
 
-from config import Config
-
-print("NVD Key:", Config.NVD_API_KEY)
-print("AbuseIPDB Key:", Config.ABUSEIPDB_API_KEY)
 
 import os
 
