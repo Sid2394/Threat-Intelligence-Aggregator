@@ -52,5 +52,8 @@ from config import Config
 print("NVD Key:", Config.NVD_API_KEY)
 print("AbuseIPDB Key:", Config.ABUSEIPDB_API_KEY)
 
+import os
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
