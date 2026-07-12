@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { toast } from "react-toastify";
 
 import Navbar from "../components/Navbar";
@@ -15,7 +14,6 @@ import "../styles/Dashboard.css";
 
 function Dashboard() {
   const [cves, setCves] = useState([]);
-
   const [loading, setLoading] = useState(false);
 
   const [stats, setStats] = useState({
@@ -31,31 +29,36 @@ function Dashboard() {
     loadDashboard();
   }, []);
 
-const refreshThreats = async () => {
-  try {
-    setLoading(true);
+  const refreshThreats = async () => {
+    try {
+      setLoading(true);
 
-    await api.get("/cves/update");
+      await api.get("/cves/update");
 
-    await loadAllCVEs();
-    await loadDashboard();
+      await loadAllCVEs();
+      await loadDashboard();
 
-    toast.success("Threat database updated successfully!");
-
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to update threats.");
-  } finally {
-    setLoading(false);
-  }
-};
+      toast.success("Threat database updated successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update threats.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadAllCVEs = async () => {
     try {
       const response = await api.get("/cves");
-      setCves(response.data);
+
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data.data || response.data.cves || [];
+
+      setCves(data);
     } catch (error) {
       console.error(error);
+      setCves([]);
     }
   };
 
@@ -70,11 +73,10 @@ const refreshThreats = async () => {
 
   return (
     <div className="dashboard">
-
       <Navbar
-  onRefresh={refreshThreats}
-  loading={loading}
-/>
+        onRefresh={refreshThreats}
+        loading={loading}
+      />
 
       <DashboardCards stats={stats} />
 
@@ -84,7 +86,6 @@ const refreshThreats = async () => {
       />
 
       <div className="dashboard-content">
-
         <div className="table-section">
           <CVETable cves={cves} />
         </div>
@@ -92,11 +93,9 @@ const refreshThreats = async () => {
         <div className="chart-section">
           <SeverityChart stats={stats} />
         </div>
-
       </div>
 
       <IPLookup />
-
     </div>
   );
 }

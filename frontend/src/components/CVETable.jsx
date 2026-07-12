@@ -17,7 +17,9 @@ function getSeverityClass(severity) {
   }
 }
 
-function CVETable({ cves }) {
+function CVETable({ cves = [] }) {
+  const cveList = Array.isArray(cves) ? cves : [];
+
   return (
     <div className="table-wrapper">
       <table className="cve-table">
@@ -31,25 +33,25 @@ function CVETable({ cves }) {
         </thead>
 
         <tbody>
-          {cves.length === 0 ? (
+          {cveList.length === 0 ? (
             <tr>
               <td colSpan="4" style={{ textAlign: "center" }}>
                 No CVEs Found
               </td>
             </tr>
           ) : (
-            cves.map((cve) => (
+            cveList.map((cve) => (
               <tr key={cve.id}>
                 <td>
-  <a
-    href={cve.url}
-    target="_blank"
-    rel="noreferrer"
-    className="cve-link"
-  >
-    {cve.cve_id}
-  </a>
-</td>
+                  <a
+                    href={cve.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="cve-link"
+                  >
+                    {cve.cve_id}
+                  </a>
+                </td>
 
                 <td>
                   <span className={getSeverityClass(cve.severity)}>
@@ -58,20 +60,20 @@ function CVETable({ cves }) {
                 </td>
 
                 <td>
-  <span
-    className={
-      cve.cvss_score >= 9
-        ? "score critical-score"
-        : cve.cvss_score >= 7
-        ? "score high-score"
-        : cve.cvss_score >= 4
-        ? "score medium-score"
-        : "score low-score"
-    }
-  >
-    {cve.cvss_score}
-  </span>
-</td>
+                  <span
+                    className={
+                      cve.cvss_score >= 9
+                        ? "score critical-score"
+                        : cve.cvss_score >= 7
+                        ? "score high-score"
+                        : cve.cvss_score >= 4
+                        ? "score medium-score"
+                        : "score low-score"
+                    }
+                  >
+                    {cve.cvss_score}
+                  </span>
+                </td>
 
                 <td>
                   {new Date(cve.published_date).toLocaleDateString()}
